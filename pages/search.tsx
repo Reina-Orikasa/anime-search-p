@@ -1,26 +1,32 @@
-import { GetStaticProps } from "next";
-import Link from "next/link";
 import { useState } from "react";
 import CreateList from "./createlist";
 
 export default function search() {
+  let [searchDone, setSearchDone] = useState(true);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [searchType, setSearchType] = useState("anime");
   function searchShows() {
-    fetch(`https://api.jikan.moe/v4/anime?q=${search}&sfw=true`)
+    if (search === "") {
+      return null;
+    }
+    setSearchDone(!searchDone);
+    fetch(`https://api.jikan.moe/v4/${searchType}?q=${search}&sfw=true`)
       .then((resp) => resp.json())
-      .then((shows) => setSearchResult(shows.data));
+      .then((shows) => setSearchResult(shows.data))
+      .finally(() => setSearchDone(true));
+
+    if (searchResult.length !== 0) {
+      setSearchDone(!searchDone);
+    }
   }
 
-  console.log(searchResult.length);
+  function updateSearchType(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchType(e.target.value);
+  }
 
   return (
     <div>
-      <div className="navbar pl-12 font-bold space-x-4">
-        <Link href="/">Home</Link>
-        <Link href="/show" className="hover:underline">Current Airing Shows</Link>
-        <Link href="/top">Top Shows</Link>
-      </div>
       <div className="text-center px-24">
         <h1 className="text-5xl mb-8 font-bold">Search</h1>
         <div className="mb-2">
@@ -36,14 +42,38 @@ export default function search() {
           >
             Search
           </button>
+          <div className="my-4">
+            <input
+              type="radio"
+              value="anime"
+              name="search"
+              defaultChecked={true}
+              onChange={(e) => updateSearchType(e)}
+            />{" "}
+            Anime
+            <input
+              type="radio"
+              value="manga"
+              name="search"
+              onChange={(e) => updateSearchType(e)}
+              className="ml-4"
+            />{" "}
+            Manga
+          </div>
         </div>
 
+        {!searchDone ? (
+          <div className="flex justify-center align-middle">
+            <>
+              <img src="/puff.svg" alt="loading" />
+              <p>loading...</p>
+            </>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
-          {searchResult.length !== 0 ? (
-            <CreateList shows={searchResult} />
-          ) : (
-            "-1"
-          )}
+          {searchResult.length !== 0 ? <CreateList shows={searchResult} /> : ""}
         </div>
       </div>
     </div>

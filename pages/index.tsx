@@ -1,22 +1,6 @@
-import Link from "next/link";
-
 function HomePage() {
   return (
     <div>
-      <div className="navbar bg-base-100 space-x-4">
-        <a className="btn btn-ghost normal-case text-xl border-2 border-white">
-          ShowFinder
-        </a>
-        <Link href="/show" className="btn btn-ghost normal-case text-xl">
-          Airing Now
-        </Link>
-        <Link href="/top" className="btn btn-ghost normal-case text-xl">
-          Top Shows
-        </Link>
-        <Link href="/search" className="btn btn-ghost normal-case text-xl">
-          Search
-        </Link>
-      </div>
       <h1 className="text-3xl font-bold text-center mt-4">
         Welcome to ShowFinder!
       </h1>
