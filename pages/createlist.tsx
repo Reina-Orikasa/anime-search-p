@@ -44,6 +44,7 @@ interface Datum {
 interface Aired {
   from: string;
   to: string;
+  string: string;
   prop: Prop;
 }
 
@@ -91,11 +92,12 @@ interface Trailer {
 }
 
 export default function CreateList(props: Shows) {
-  let showList: object[] = []
+  let showList: object[] = [];
   if (props) {
     showList = props.shows?.map(
       ({
         mal_id,
+        aired,
         images,
         episodes,
         url,
@@ -107,11 +109,12 @@ export default function CreateList(props: Shows) {
         score,
         season,
         status,
-        synopsis
+        synopsis,
+        type,
       }) => {
         return (
           <div key={mal_id}>
-            <div className="border-2 border-white rounded-xl p-4 space-y-2 h-full">
+            <div className="bg-slate-200 text-black rounded-lg p-4 space-y-2 h-full">
               <div className="flex justify-center align-middle">
                 <img
                   src={images.jpg.image_url}
@@ -132,20 +135,47 @@ export default function CreateList(props: Shows) {
                 </h5>
               )}
               <p className="font-semibold">{members} members</p>
-              {status === 'Finished Airing' ? (
-                <p className="font-semibold">Aired {season} {year}</p>
+
+              {status.includes("Finished") ? (
+                <div>
+                  {type === "Manga" ||
+                  type === "One-shot" ||
+                  type === "Light Novel" ||
+                  type === "Novel" ||
+                  type === "Doujin" ||
+                  type === "Manhua" ||
+                  type === "Manhwa" ? (
+                    <p className="font-semibold">Finished Publishing</p>
+                  ) : (
+                    <p className="font-semibold">
+                      Aired {season} {year} ({aired.string})
+                    </p>
+                  )}
+                </div>
               ) : (
-                <p className="font-semibold">Currently airing</p>
+                <div>
+                  {type === "Manga" ? (
+                    <p className="font-semibold">Currently Publishing</p>
+                  ) : (
+                    <p className="font-semibold">Currently Airing</p>
+                  )}
+                </div>
               )}
-              <p>{episodes} episodes</p>
+
+              {type !== "Manga" && type !== "One-shot" ? (
+                <p>{episodes} episode(s)</p>
+              ) : (
+                ""
+              )}
+
               <p className="font-semibold text-lg">⭐{score}</p>
               <hr className="pt-4" />
               <p className=" text-md">Alternative Names</p>
               <div className="pb-2">
                 <p className="text-sm">{title_japanese}</p>
-                {title_english ? "" : <p>'English title same'</p>}
+                
               </div>
-              <hr className="pb-4" />
+              <hr className="pb-4 bg-black" />
               <p className="overflow-y-auto h-48 mb-4 px-4">{synopsis}</p>
             </div>
           </div>

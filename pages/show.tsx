@@ -23,6 +23,6 @@ export const getStaticProps: GetStaticProps = async () => {
   const todo = await res.json();
   return {
     props: { todo },
-    revalidate: 10,
+    revalidate: 60,
   };
 };

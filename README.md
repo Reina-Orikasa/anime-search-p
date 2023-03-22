@@ -1,3 +1,14 @@
+# Thanks
+[Sam Herbert](https://samherbert.net/svg-loaders/) For the svg loading animation
+
+Home photo by [Wang John on Unsplash.](https://unsplash.com/photos/CZ6PG4ozU9c)
+
+API provided by [jikan.moe](https://jikan.moe/)
+
+
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

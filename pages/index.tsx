@@ -1,11 +1,11 @@
 function HomePage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-center mt-4">
+      <h1 className="text-6xl font-bold text-center my-4">
         Welcome to ShowFinder!
       </h1>
       <h2 className="text-2xl font-semibold text-center mb-4">
-        Click one of the buttons above to get started.
+        Click one of the links above to get started.
       </h2>
       <div className="flex justify-center align-middle">
         <img
