@@ -18,6 +18,9 @@ export default function navbar() {
       <Link href="/search" className="hover:underline">
         Search
       </Link>
+      <Link href="/yourlist" className="hover:underline">
+        Your List
+      </Link>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { useShowStore } from "../components/store";
+
 interface Shows {
   shows: Datum[];
 }
@@ -91,7 +93,23 @@ interface Trailer {
   embed_url: string;
 }
 
+interface showDataI {
+  mal_id: number;
+  url: string;
+  episodes: number;
+  title_english: string;
+  title: string;
+  episodes_watched: number;
+}
+
 export default function CreateList(props: Shows) {
+  function handleAddShow(showInfo: showDataI[]) {
+    addShow(showInfo);
+  }
+  const addShow = useShowStore((state) => state.addShow);
+  const shows = useShowStore((state) => state.shows);
+  const episodes_watched = 0;
+
   let showList: object[] = [];
   if (props) {
     showList = props.shows?.map(
@@ -134,7 +152,7 @@ export default function CreateList(props: Shows) {
                   </a>
                 </h5>
               )}
-              <p className="font-semibold">{members} members</p>
+              <p className="font-semibold text-lg">{members} members</p>
 
               {status.includes("Finished") ? (
                 <div>
@@ -163,7 +181,11 @@ export default function CreateList(props: Shows) {
               )}
 
               {type !== "Manga" && type !== "One-shot" ? (
-                <p>{episodes} episode(s)</p>
+                <p>
+                  {episodes === null
+                    ? "unknown episodes"
+                    : episodes + " episodes"}{" "}
+                </p>
               ) : (
                 ""
               )}
@@ -171,11 +193,32 @@ export default function CreateList(props: Shows) {
               <p className="font-semibold text-lg">⭐{score}</p>
               <hr className="pt-4" />
               <p className=" text-md">Alternative Names</p>
+
               <div className="pb-2">
                 <p className="text-sm">{title_japanese}</p>
-                
               </div>
-              <hr className="pb-4 bg-black" />
+              {shows.some((show) => show.mal_id === mal_id) ? (
+                <p className="text-lg">Added to list</p>
+              ) : (
+                <button
+                  className="border-2 border-black rounded-lg p-2"
+                  onClick={() =>
+                    handleAddShow([
+                      {
+                        mal_id,
+                        url,
+                        episodes,
+                        title,
+                        title_english,
+                        episodes_watched,
+                      },
+                    ])
+                  }
+                >
+                  Add
+                </button>
+              )}
+              <hr className="mb-4 p-1 bg-black" />
               <p className="overflow-y-auto h-48 mb-4 px-4">{synopsis}</p>
             </div>
           </div>
