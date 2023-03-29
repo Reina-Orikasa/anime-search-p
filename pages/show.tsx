@@ -8,9 +8,9 @@ export default function Show({
   const seasonShows = todo.data;
   return (
     <div>
-      <div className="text-center px-24">
-        <h1 className="text-5xl mb-8 font-bold">Currently Airing Shows</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+      <div className="text-center px-4 md:px-24">
+        <h1 className="text-4xl md:text-5xl mb-8 font-bold">Currently Airing Shows</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
           <CreateList shows={seasonShows} />
         </div>
       </div>

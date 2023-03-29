@@ -27,11 +27,13 @@ export default function search() {
 
   return (
     <div>
-      <div className="text-center px-24">
-        <h1 className="text-5xl mb-8 font-bold">Search</h1>
+      <div className="text-center px-6 md:px-24">
+        <h1 className="text-4xl md:text-5xl mb-8 font-bold">Search</h1>
         <div className="mb-2">
+          <label htmlFor="search">Search</label>
           <input
             type="text"
+            id="search"
             value={search}
             onChange={(e) => setSearch(e.currentTarget.value)}
             className="p-2 bg-white rounded-xl text-black mr-2"
@@ -72,7 +74,7 @@ export default function search() {
         ) : (
           ""
         )}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
           {searchResult.length !== 0 ? <CreateList shows={searchResult} /> : ""}
         </div>
       </div>

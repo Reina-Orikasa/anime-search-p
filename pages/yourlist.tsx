@@ -67,7 +67,7 @@ export default function yourlist() {
             <td className="border border-slate-500">{show.episodes}</td>
             <td className="px-2 text-lg border border-slate-500 space-x-2">
               <button onClick={handleIncrement}>Add</button>
-              <button onClick={handleDecrement}>Minus</button>
+              <button onClick={handleDecrement}>Subtract</button>
               <button onClick={handleDelete}>Delete</button>
             </td>
           </tr>

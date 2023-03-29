@@ -9,8 +9,8 @@ export default function Top({
   return (
     <div>
       <div className="text-center px-6 md:px-24">
-        <h1 className="text-5xl mb-8 font-bold">Top 12 Ranking on MAL</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+        <h1 className="text-4xl md:text-5xl mb-8 font-bold">Top 12 Ranking on MAL</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-4">
           <CreateList shows={topShowArray} />
         </div>
       </div>
