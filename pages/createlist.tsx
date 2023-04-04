@@ -1,4 +1,5 @@
 import { useShowStore } from "../components/store";
+import Image from "next/image";
 
 interface Shows {
   shows: Datum[];
@@ -134,23 +135,26 @@ export default function CreateList(props: Shows) {
           <div key={mal_id}>
             <div className="bg-slate-200 text-black rounded-lg p-4 space-y-2 h-full">
               <div className="flex justify-center align-middle">
-                <img
+                <Image
                   src={images.jpg.image_url}
+                  alt={title + " image"}
                   className="rounded-xl mb-4"
-                ></img>
+                  height={318}
+                  width={225}
+                ></Image>
               </div>
               {title_english ? (
-                <h5 className="text-xl hover:underline font-bold">
+                <p className="text-xl hover:underline font-bold">
                   <a href={url} target="_blank">
                     {title_english}
                   </a>
-                </h5>
+                </p>
               ) : (
-                <h5 className="text-xl hover:underline font-bold">
+                <p className="text-xl hover:underline font-bold">
                   <a href={url} target="_blank">
                     {title}
                   </a>
-                </h5>
+                </p>
               )}
               <p className="font-semibold text-lg">{members} members</p>
 
