@@ -1,4 +1,26 @@
 import { useState } from "react";
+import { Doughnut, Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+);
+
 interface Image {
   jpg: {
     image_url: string;
@@ -109,9 +131,186 @@ export default function profileSearch() {
     }
   }
   console.log(searchResult);
+  const dateOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  } as const;
+
+  let totalAnimeEntries = 0;
+  let totalMangaEntries = 0;
+  let animeData = {
+    labels: [""],
+    datasets: [
+      {
+        label: "",
+        data: [0],
+        backgroundColor: "",
+      },
+    ],
+  };
+
+  let mangaData = {
+    labels: [""],
+    datasets: [
+      {
+        label: "",
+        data: [0],
+        backgroundColor: "",
+      },
+    ],
+  };
+  if (searchResult) {
+    totalAnimeEntries =
+      searchResult?.statistics.anime.completed +
+      searchResult?.statistics.anime.watching +
+      searchResult?.statistics.anime.on_hold +
+      searchResult?.statistics.anime.dropped +
+      searchResult?.statistics.anime.plan_to_watch;
+
+    totalMangaEntries =
+      searchResult?.statistics.manga.reading +
+      searchResult.statistics.manga.completed +
+      searchResult?.statistics.manga.on_hold +
+      searchResult?.statistics.manga.dropped +
+      searchResult?.statistics.manga.plan_to_read;
+
+    animeData = {
+      labels: ["Total Shows: " + totalAnimeEntries],
+      datasets: [
+        {
+          label: `Watching (${searchResult?.statistics.anime.watching}) (${(
+            (searchResult?.statistics.anime.watching / totalAnimeEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.anime.watching],
+          backgroundColor: "#818cf8",
+        },
+        {
+          label: `Completed (${searchResult?.statistics.anime.completed}) (${(
+            (searchResult?.statistics.anime.completed / totalAnimeEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.anime.completed],
+          backgroundColor: "#34d399",
+        },
+        {
+          label: `On hold (${searchResult?.statistics.anime.on_hold}) (${(
+            (searchResult?.statistics.anime.on_hold / totalAnimeEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.anime.on_hold],
+          backgroundColor: "#fbbf24",
+        },
+        {
+          label: `Dropped (${searchResult?.statistics.anime.dropped}) (${(
+            (searchResult?.statistics.anime.dropped / totalAnimeEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.anime.dropped],
+          backgroundColor: "#f87171",
+        },
+        {
+          label: `Plan to watch (${
+            searchResult?.statistics.anime.plan_to_watch
+          }) (${(
+            (searchResult?.statistics.anime.plan_to_watch / totalAnimeEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.anime.plan_to_watch],
+          backgroundColor: "#a3a3a3",
+        },
+      ],
+    };
+
+    mangaData = {
+      labels: ["Total Series: " + totalMangaEntries],
+      datasets: [
+        {
+          label: `Reading (${searchResult?.statistics.manga.reading}) (${(
+            (searchResult?.statistics.manga.reading / totalMangaEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.manga.reading],
+          backgroundColor: "#818cf8",
+        },
+        {
+          label: `Completed (${searchResult?.statistics.manga.completed}) (${(
+            (searchResult?.statistics.manga.completed / totalMangaEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.manga.completed],
+          backgroundColor: "#34d399",
+        },
+        {
+          label: `On hold (${searchResult?.statistics.manga.on_hold}) (${(
+            (searchResult?.statistics.manga.on_hold / totalMangaEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.manga.on_hold],
+          backgroundColor: "#fbbf24",
+        },
+        {
+          label: `Dropped (${searchResult?.statistics.manga.dropped}) (${(
+            (searchResult?.statistics.manga.dropped / totalMangaEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.manga.dropped],
+          backgroundColor: "#f87171",
+        },
+        {
+          label: `Plan to read (${
+            searchResult?.statistics.manga.plan_to_read
+          }) (${(
+            (searchResult?.statistics.manga.plan_to_read / totalMangaEntries) *
+            100
+          ).toFixed(2)}%)`,
+          data: [searchResult?.statistics.manga.plan_to_read],
+          backgroundColor: "#a3a3a3",
+        },
+      ],
+    };
+  }
+
+  const options = {
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: 14,
+          },
+          color: "white",
+        },
+      },
+      title: {
+        display: true,
+        text: "Distribution of Status",
+        color: "white",
+        font: {
+          size: 24,
+        },
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+        ticks: {
+          color: "white",
+        },
+      },
+      y: {
+        stacked: true,
+        ticks: {
+          color: "white",
+        },
+      },
+    },
+    indexAxis: "y" as const,
+  };
 
   return (
-    <div className="text-center px-6 md:px-24">
+    <div className="text-center px-2 md:px-10 text-slate-200">
       <h1 className="text-4xl md:text-5xl mb-8 font-bold">Profile Search</h1>
       <div className="mb-2">
         <label htmlFor="search">Search: </label>
@@ -132,7 +331,7 @@ export default function profileSearch() {
         {!searchDone ? (
           <div className="flex justify-center align-middle">
             <>
-              <img src="/puff.svg" alt="loading" />
+              <img src="/puff.svg" alt="loading" className="my-5" />
               <p>loading...</p>
             </>
           </div>
@@ -146,48 +345,126 @@ export default function profileSearch() {
               <div className="flex justify-center align-middle gap-2">
                 <img
                   src={searchResult.images.jpg.image_url}
-                  className="rounded-xl "
+                  className="rounded-full md:mr-7"
                 />
-                <div>
+                <div className="space-y-2 mt-4">
                   <a
-                    className="text-3xl font-bold hover:underline"
+                    className="text-4xl font-bold hover:underline"
                     href={searchResult.url}
+                    target="_blank"
                   >
                     {searchResult.username}
                   </a>
+                  <p>Location: {searchResult.location}</p>
                   <p>
-                    Mean Anime Score: {searchResult.statistics.anime.mean_score}
+                    Joined on{" "}
+                    <span className="font-semibold">
+                      {new Date(searchResult.joined).toLocaleDateString(
+                        undefined,
+                        dateOptions
+                      )}
+                    </span>
+                  </p>
+                  <p>
+                    Last online:{" "}
+                    <span className="font-semibold">
+                      {new Date(searchResult.last_online).toLocaleDateString(
+                        undefined,
+                        dateOptions
+                      )}
+                    </span>
                   </p>
                 </div>
               </div>
+              <hr className="my-4" />
 
-              {/* <a className="text-3xl font-bold" href={searchResult.url}>{searchResult.username}</a>
-              <div>
-                Mean Anime Score:{searchResult.statistics.anime.mean_score}
-              </div> */}
+              <div className="my-6">
+                <p className="text-3xl font-bold my-8">
+                  Anime | Manga Statistics
+                </p>
 
-              <div className="my-4">
-                <h2 className="font-bold text-3xl">Recent Updates</h2>
-                <div className="grid grid-cols-3">
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div>
+                    <h2 className="font-semibold text-4xl">Anime</h2>
+                    <p>
+                      {searchResult.statistics.anime.days_watched} days
+                      wasted...
+                    </p>
+                    <p>
+                      {searchResult.statistics.anime.episodes_watched} episodes
+                      watched
+                    </p>
+                  </div>
+
+                  <div>
+                    <h2 className="font-semibold text-4xl">Manga</h2>
+                    <p>
+                      {searchResult.statistics.manga.days_read} days wasted...
+                    </p>
+                    <p>
+                      reading {searchResult.statistics.manga.chapters_read} chapters
+                    </p>
+                    <p>
+                      finishing {searchResult.statistics.manga.volumes_read} volumes
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative md:w-[70vh] md:h-[40vh] flex justify-center align-middle m-auto gap-7">
+                  <Bar options={options} data={animeData} />
+
+                  <Bar options={options} data={mangaData} />
+                </div>
+              </div>
+
+              <hr className="my-4" />
+              <div className="my-6 h-full">
+                <h2 className="font-bold text-3xl my-6">
+                  Recent Anime Updates
+                </h2>
+                <div className="grid grid-cols-3 gap-2">
                   {searchResult.updates.anime.map((show) => {
+                    const updateDate = new Date(show.date);
                     return (
                       <div
                         className="flex justify-center align-middle"
                         key={show.entry.title}
                       >
                         <div>
-                          <img
-                            src={show.entry?.images?.webp?.image_url}
-                            alt={show.entry.title + " image"}
-                            className="rounded-xl w-1/2 h-auto"
-                          />
-                          <p className="text-xl font-semibold">{show.date}</p>
-                          <p>{show.entry.title}</p>
+                          <div className="flex justify-center align-middle">
+                            <img
+                              src={show.entry?.images?.webp?.image_url}
+                              alt={show.entry.title + " image"}
+                              className="rounded-xl h-[256px] w-auto mb-4"
+                            />
+                          </div>
+
+                          <a
+                            className="text-2xl font-semibold hover:underline mb-2"
+                            href={show.entry.url}
+                            target="_blank"
+                          >
+                            {show.entry.title} ({show.status === 'Watching -' ? 'Watching' : show.status})
+                          </a>
                           <p>
-                            {show.episodes_seen}/{show.episodes_total}
+                            Last updated on{" "}
+                            <span className="font-semibold">
+                              {updateDate.toLocaleDateString(
+                                undefined,
+                                dateOptions
+                              )}
+                            </span>
                           </p>
-                          <p>{show.score}</p>
-                          <p>{show.status}</p>
+                          <p>
+                            {show.episodes_seen === null
+                              ? `No episodes watched yet...`
+                              : `${show.episodes_seen}/${show.episodes_total} episodes`}
+                          </p>
+                          <p className="font-semibold">
+                            {show.score === 0
+                              ? "no score"
+                              : `Score: ${show.score}`}
+                          </p>
                         </div>
                       </div>
                     );
@@ -195,8 +472,10 @@ export default function profileSearch() {
                 </div>
               </div>
 
+              <hr className="my-4" />
+
               <div>
-                <h2 className="font-semibold text-3xl my-4">Favorites</h2>
+                <h2 className="font-semibold text-3xl my-4">Anime Favorites</h2>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-1 space-y-1 md:space-y-5">
                   {searchResult.favorites.anime.map((show) => {
                     return (
@@ -205,10 +484,12 @@ export default function profileSearch() {
                         className="flex justify-center align-middle my-2"
                       >
                         <div>
-                          <img
-                            src={show?.images?.webp?.image_url}
-                            className="rounded-lg"
-                          />
+                          <div className="flex justify-center align-middle">
+                            <img
+                              src={show?.images?.webp?.image_url}
+                              className="rounded-lg w-2/3 h-full"
+                            />
+                          </div>
                           <a
                             className="font-semibold text-lg hover:underline"
                             href={show.url}
