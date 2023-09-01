@@ -5,7 +5,7 @@ export default function navbar() {
     <div className="text-white navbar md:pl-12 font-bold space-x-4 text-sm md:text-lg bg-gray-900 mb-8">
       <Link
         href="/"
-        className="hover:underline border-2 border-white p-2 rounded-xl"
+        className="hover:underline border-2 border-white p-2 rounded-xl hidden md:block"
       >
         ShowFinder
       </Link>

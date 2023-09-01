@@ -42,7 +42,16 @@ interface UserI {
       }
     ];
     characters: [];
-    manga: [];
+    manga: [
+      {
+        images: Image;
+        mal_id: number;
+        start_year: number;
+        title: string;
+        type: string;
+        url: string;
+      }
+    ];
     people: [];
   };
   images: Image;
@@ -130,7 +139,6 @@ export default function profileSearch() {
       setSearchDone(!searchDone);
     }
   }
-  console.log(searchResult);
   const dateOptions = {
     year: "numeric",
     month: "long",
@@ -272,6 +280,8 @@ export default function profileSearch() {
     };
   }
 
+  console.log(searchResult?.favorites.manga);
+
   const options = {
     plugins: {
       legend: {
@@ -345,11 +355,11 @@ export default function profileSearch() {
               <div className="flex justify-center align-middle gap-2">
                 <img
                   src={searchResult.images.jpg.image_url}
-                  className="rounded-full md:mr-7"
+                  className="rounded-full md:mr-7 pr-1"
                 />
                 <div className="space-y-2 mt-4">
                   <a
-                    className="text-4xl font-bold hover:underline"
+                    className="text-3xl md:text-4xl font-bold hover:underline"
                     href={searchResult.url}
                     target="_blank"
                   >
@@ -385,32 +395,56 @@ export default function profileSearch() {
 
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   <div>
-                    <h2 className="font-semibold text-4xl">Anime</h2>
+                    <h2 className="font-semibold text-2xl md:text-4xl mb-4">
+                      Anime
+                    </h2>
                     <p>
-                      {searchResult.statistics.anime.days_watched} days
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.anime.days_watched} days
+                      </span>{" "}
                       wasted...
                     </p>
                     <p>
-                      {searchResult.statistics.anime.episodes_watched} episodes
-                      watched
+                      watching{" "}
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.anime.episodes_watched}{" "}
+                        episodes
+                      </span>{" "}
+                    </p>
+                    <p>
+                      finishing{" "}
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.anime.completed} series.
+                      </span>{" "}
                     </p>
                   </div>
 
                   <div>
-                    <h2 className="font-semibold text-4xl">Manga</h2>
+                    <h2 className="font-semibold text-2xl md:text-4xl mb-4">
+                      Manga
+                    </h2>
                     <p>
-                      {searchResult.statistics.manga.days_read} days wasted...
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.manga.days_read} days {" "}
+                      </span>
+                      wasted...
                     </p>
                     <p>
-                      reading {searchResult.statistics.manga.chapters_read} chapters
+                      reading {" "}
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.manga.chapters_read} chapters
+                      </span>
                     </p>
                     <p>
-                      finishing {searchResult.statistics.manga.volumes_read} volumes
+                      finishing {" "}
+                      <span className="font-semibold text-lg">
+                        {searchResult.statistics.manga.volumes_read} volumes
+                      </span>
                     </p>
                   </div>
                 </div>
 
-                <div className="relative md:w-[70vh] md:h-[40vh] flex justify-center align-middle m-auto gap-7">
+                <div className="relative md:w-[70vh] md:h-[40vh] md:flex md:justify-center md:align-middle m-auto md:gap-7">
                   <Bar options={options} data={animeData} />
 
                   <Bar options={options} data={mangaData} />
@@ -419,85 +453,187 @@ export default function profileSearch() {
 
               <hr className="my-4" />
               <div className="my-6 h-full">
-                <h2 className="font-bold text-3xl my-6">
-                  Recent Anime Updates
-                </h2>
-                <div className="grid grid-cols-3 gap-2">
-                  {searchResult.updates.anime.map((show) => {
-                    const updateDate = new Date(show.date);
-                    return (
-                      <div
-                        className="flex justify-center align-middle"
-                        key={show.entry.title}
-                      >
-                        <div>
-                          <div className="flex justify-center align-middle">
-                            <img
-                              src={show.entry?.images?.webp?.image_url}
-                              alt={show.entry.title + " image"}
-                              className="rounded-xl h-[256px] w-auto mb-4"
-                            />
-                          </div>
+                <h2 className="font-bold text-3xl my-8">Recent Updates</h2>
+                <div className="grid md:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
+                    {searchResult.updates.anime.map((show) => {
+                      const updateDate = new Date(show.date);
+                      return (
+                        <div
+                          className="flex justify-center align-middle"
+                          key={show.entry.title}
+                        >
+                          <div>
+                            <div className="flex justify-center align-middle">
+                              <img
+                                src={show.entry?.images?.webp?.image_url}
+                                alt={show.entry.title + " image"}
+                                className="rounded-xl h-[150px] md:h-[250px] w-auto mb-4"
+                              />
+                            </div>
 
-                          <a
-                            className="text-2xl font-semibold hover:underline mb-2"
-                            href={show.entry.url}
-                            target="_blank"
-                          >
-                            {show.entry.title} ({show.status === 'Watching -' ? 'Watching' : show.status})
-                          </a>
-                          <p>
-                            Last updated on{" "}
-                            <span className="font-semibold">
+                            <a
+                              className="text-lg md:text-xl font-bold hover:underline mb-4"
+                              href={show.entry.url}
+                              target="_blank"
+                            >
+                              {show.entry.title} (
+                              {show.status === "Watching -"
+                                ? "Watching"
+                                : show.status}
+                              )
+                            </a>
+                            <p className="font-semibold">
                               {updateDate.toLocaleDateString(
                                 undefined,
                                 dateOptions
                               )}
-                            </span>
-                          </p>
-                          <p>
-                            {show.episodes_seen === null
-                              ? `No episodes watched yet...`
-                              : `${show.episodes_seen}/${show.episodes_total} episodes`}
-                          </p>
-                          <p className="font-semibold">
-                            {show.score === 0
-                              ? "no score"
-                              : `Score: ${show.score}`}
-                          </p>
+                            </p>
+                            <p>
+                              {show.episodes_seen === null ? (
+                                <span className="font-light">
+                                  No episodes yet...
+                                </span>
+                              ) : (
+                                <span className="font-semibold">
+                                  {show.episodes_seen}/{show.episodes_total}{" "}
+                                  episodes
+                                </span>
+                              )}
+                            </p>
+                            <p className="font-semibold">
+                              {show.score === 0 ? (
+                                <span className="font-light">no score</span>
+                              ) : (
+                                <span className="font-semibold">
+                                  Score: {show.score}
+                                </span>
+                              )}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    {searchResult.updates.manga.map((series) => {
+                      const updateDate = new Date(series.date);
+                      return (
+                        <div
+                          className="flex justify-center align-middle"
+                          key={series.entry.title}
+                        >
+                          <div>
+                            <div className="flex justify-center align-middle">
+                              <img
+                                src={series.entry.images.jpg.image_url}
+                                className="rounded-xl h-[150px] md:h-[250px] w-auto mb-4"
+                              />
+                            </div>
+                            <a
+                              className="text-lg md:text-xl font-bold hover:underline"
+                              href={series.entry.url}
+                              target="_blank"
+                            >
+                              {series.entry.title} ({series.status})
+                            </a>
+                            <p className="font-semibold">
+                              {updateDate.toLocaleDateString(
+                                undefined,
+                                dateOptions
+                              )}
+                            </p>
+
+                            <p>
+                              {series.chapters_read === null ? (
+                                <span className="font-light">
+                                  No chapters yet...
+                                </span>
+                              ) : (
+                                <span className="font-semibold">
+                                  {series.chapters_read}/{series.chapters_total}{" "}
+                                  chapters
+                                </span>
+                              )}
+                            </p>
+
+                            <p className="font-semibold">
+                              {series.score === 0 ? (
+                                <span className="font-light">no score</span>
+                              ) : (
+                                <span className="font-semibold">
+                                  Score: {series.score}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
               <hr className="my-4" />
 
               <div>
-                <h2 className="font-semibold text-3xl my-4">Anime Favorites</h2>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-1 space-y-1 md:space-y-5">
+                <h2 className="font-semibold text-3xl my-8">Anime Favorites</h2>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   {searchResult.favorites.anime.map((show) => {
                     return (
                       <div
                         key={show.title}
-                        className="flex justify-center align-middle my-2"
+                        className="flex justify-center align-middle my-4"
                       >
                         <div>
                           <div className="flex justify-center align-middle">
                             <img
                               src={show?.images?.webp?.image_url}
-                              className="rounded-lg w-2/3 h-full"
+                              className="rounded-lg h-[200px] md:h-[225px] w-auto mb-3"
                             />
                           </div>
                           <a
-                            className="font-semibold text-lg hover:underline"
+                            className="text-lg md:text-xl font-bold hover:underline"
                             href={show.url}
                             target="_blank"
                           >
-                            {show.title} ({show.start_year})
+                            {show.title}{" "}
                           </a>
-                          <p>{show.type}</p>
+                          <p className="font-light">
+                            ({show.start_year}/{show.type})
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <hr className="my-4" />
+                <h2 className="font-semibold text-3xl my-8">Manga Favorites</h2>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {searchResult.favorites.manga.map((series) => {
+                    return (
+                      <div
+                        key={series.mal_id}
+                        className="flex justify-center align-middle my-4"
+                      >
+                        <div>
+                          <div className="flex justify-center align-middle">
+                            <img
+                              src={series?.images?.webp?.image_url}
+                              className="rounded-lg h-[200px] md:h-[225px] w-auto mb-3"
+                            />
+                          </div>
+                          <a
+                            className="text-lg md:text-xl font-bold hover:underline"
+                            href={series.url}
+                            target="_blank"
+                          >
+                            {series.title}{" "}
+                          </a>
+                          <p className="font-light">
+                            ({series.start_year}/{series.type})
+                          </p>
                         </div>
                       </div>
                     );
